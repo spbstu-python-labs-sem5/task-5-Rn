@@ -33,6 +33,20 @@ class TestMakePointClass(unittest.TestCase):
     def test_cache(self):
         self.assertIs(make_point_class(5), make_point_class(5))
 
+    def test_cache_normalizes_call_style(self):
+        point_class = make_point_class(6)
+        self.assertIs(point_class, make_point_class(n=6))
+        self.assertIs(point_class, make_point_class(6, name=None))
+
+    def test_invalid_dimension(self):
+        for n in (0, -1):
+            with self.subTest(n=n), self.assertRaises(ValueError):
+                make_point_class(n)
+
+        for n in (1.5, "3", True):
+            with self.subTest(n=n), self.assertRaises(TypeError):
+                make_point_class(n)
+
 
 if __name__ == "__main__":
     unittest.main()

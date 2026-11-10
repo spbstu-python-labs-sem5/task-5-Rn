@@ -18,9 +18,17 @@ class CoordDescriptor:
             )
         instance.__dict__[self.private_name] = value
         
-@lru_cache(maxsize=None)
 def make_point_class(n, name=None):
+    if not isinstance(n, int) or isinstance(n, bool):
+        raise TypeError("n должно быть целым числом")
+    if n <= 0:
+        raise ValueError("n должно быть положительным")
 
+    return _make_point_class_cached(n, name)
+
+
+@lru_cache(maxsize=None)
+def _make_point_class_cached(n, name):
     class_name = name or "PointN"
 
     namespace = {}
